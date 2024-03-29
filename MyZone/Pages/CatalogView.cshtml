@@ -1,0 +1,12 @@
+﻿@page
+@model MyZone.Pages.CatalogViewModel
+@{
+}
+@foreach (var product in Model.products)
+{
+    <div class="product">
+        <img src="" alt="">
+        <h4>@product.name</h4>
+        <h5>@product.price</h5>
+    </div>
+}
