@@ -1,31 +1,47 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
+using System.Security.Claims;
 
 namespace MyZone.Pages
 {
+
     public class AuthorizationPageModel : PageModel
     {
         public string ErrorMessage { get; set; } = string.Empty;
-        public void OnGet()
+
+        private MyZoneDbContext db;
+        private ILogger<Program> logger;
+        public AuthorizationPageModel(MyZoneDbContext db, ILogger<Program> logger)
         {
+            this.db = db;
+            this.logger = logger;
         }
-        public IActionResult OnPost(string login, string passwd) 
+        public IActionResult OnGet()
         {
-            if (true)
+            return Page();
+        }
+        public async Task<IActionResult> OnPost(string email, string passwd) 
+        {
+            var user = db.users.FromSql($"select u_passwd from users where u_email={email}").ToList();
+            if (!(user.Count > 1))
             {
-                return Redirect("");
+                if (passwd == user.First().u_passwd)
+                {
+                    var claims = new List<Claim> { new Claim(ClaimTypes.Name, email) };
+                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                    return RedirectToAction("PersonalAccount");
+                }
             }
-            else
-            {
-                ErrorMessage = "Ошибка";
-                return Page();
-            }
+            logger.LogCritical("The data in the database was not unambiguous.");
+            return Unauthorized();
         }
-        public record class NewUser(string name, string phone, string email, string login, string passwd);
-        public IActionResult OnPost()
-        {
-            return Redirect("");
-        }
-        
     }
 }

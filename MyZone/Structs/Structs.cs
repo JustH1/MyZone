@@ -139,6 +139,7 @@ namespace MyZone.Structs
         public string u_rights { get; set; }
         [NotNull]
         public string u_date_account_creation { get; set; }
+        public string u_passwd { get; set; }
     }
 }
 

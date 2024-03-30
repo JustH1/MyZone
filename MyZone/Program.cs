@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 namespace MyZone
 {
     public class Program
@@ -8,14 +10,19 @@ namespace MyZone
 
             builder.Services.AddRazorPages();
 
-            var app = builder.Build();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => options.LoginPath = "/AuthorizationPage");
+            builder.Services.AddAuthentication();
 
+            builder.Services.AddTransient<MyZoneDbContext>();//
+
+            var app = builder.Build();
+            app.Environment.EnvironmentName = "Development";
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
