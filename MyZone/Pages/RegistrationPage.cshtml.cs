@@ -1,27 +1,22 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using MyZone.Structs;
 using System.Security.Claims;
+using MyZone.Structs;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace MyZone.Pages
 {
-
-    public class AuthorizationPageModel : PageModel
+    public class RegistrationPageModel : PageModel
     {
         public string ErrorMessage { get; set; } = string.Empty;
 
         private MyZoneDbContext db;
         private ILogger<Program> logger;
-        public AuthorizationPageModel(MyZoneDbContext db, ILogger<Program> logger)
+        public RegistrationPageModel(MyZoneDbContext db, ILogger<Program> logger)
         {
             this.db = db;
             this.logger = logger;
@@ -30,16 +25,25 @@ namespace MyZone.Pages
         {
             return Page();
         }
-        public async Task<IActionResult> OnPost(string email, string passwd) 
+        public async Task<IActionResult> OnPost(string name, string email, string passwd, string repeat_passwd)
         {
             try
             {
                 List<users>? users = db.users.FromSql($"select * from users where u_email={email}").ToList();
-                if (!(users.Count > 1))
+                if (users.Count == 0)
                 {
-                    users user = users.First();
-                    if (HashPasswd(passwd) == user.u_passwd)
+                    if (passwd == repeat_passwd)
                     {
+                        users user = new users()
+                        {
+                            u_name = name,
+                            u_email = email,
+                            u_date_account_creation = DateTime.Now.ToString(),
+                            u_passwd = HashPasswd(passwd),
+                            u_rights = "user"
+                        };
+                        db.users.Add(user);
+                        db.SaveChanges();
                         var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, user.u_id.ToString()),
@@ -51,19 +55,19 @@ namespace MyZone.Pages
                     }
                     else
                     {
-                        ErrorMessage = "Incorrect data.";
-                        return Unauthorized();
+                        HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                        return Content("Passwords are not the same.");
                     }
                 }
-                logger.LogCritical("The data in the database was not unambiguous.");
-                HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Page();
+                else
+                {
+                    HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                    return Page();
+                }
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.Message);
-                HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return Page();
+                return StatusCode(500);                 
             }
         }
         private string HashPasswd(string passwd)

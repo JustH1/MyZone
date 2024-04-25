@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
@@ -9,7 +10,6 @@ namespace MyZone.Structs
         [Key]
         public int c_id { get; set; } 
         public string c_name { get; set; }
-        public int c_count { get; set; }
     }
     public class reviews
     {
@@ -24,6 +24,7 @@ namespace MyZone.Structs
         public double r_rating { get; set; }
         public string r_date_writing { get; set; }
     }
+    [Keyless]
     public class user_order
     {
         [NotNull]
@@ -31,6 +32,7 @@ namespace MyZone.Structs
         [NotNull]
         public int o_id { get; set; }
     }
+    [Keyless]
     public class order_shop
     {
         [NotNull]
@@ -38,6 +40,7 @@ namespace MyZone.Structs
         [NotNull]
         public string sh_id { get; set; }
     }
+    [Keyless]
     public class order_product
     {
         [NotNull]
@@ -50,10 +53,17 @@ namespace MyZone.Structs
         [Key]
         public int o_id { get; set; }
         public double o_price { get; set; }
-        public int catalog_id { get; set; }
+        public int u_id { get; set; }
+        [MaxLength(50)]
+        public string o_status { get; set; }
         [MaxLength(50)]
         public string o_date_creation { get; set; }
+        [MaxLength(50)]
+        public string? o_deli_date { get; set; }
+        [MaxLength(50)]
+        public int o_days_road { get; set; }
     }
+    [Keyless]
     public class order_pickuppoint
     {
         [NotNull]
@@ -61,7 +71,7 @@ namespace MyZone.Structs
         [NotNull]
         public string pup_id { get; set; }
     }
-    public class order_delivery_status
+    /*public class order_delivery_status
     {
         [Key]
         public int o_id { get; set; }
@@ -72,7 +82,7 @@ namespace MyZone.Structs
         public string deli_ocd { get; set; }
         [MaxLength(50)]
         public string deli_odd { get; set; }
-    }
+    }*/
     public class pickup_point
     {
         [Key]
@@ -110,6 +120,7 @@ namespace MyZone.Structs
         public double sh_rating { get; set; }
         public string sh_email { get; set; }
         public string sh_phone_number { get; set; }
+        public int u_id { get; set; }
     }
     public class user_payment_method
     {
@@ -123,7 +134,7 @@ namespace MyZone.Structs
     public class users
     {
         [NotNull]
-        [System.ComponentModel.DataAnnotations.Key]
+        [Key]
         public int u_id { get; set; }
         [NotNull]
         [MaxLength(50)]
@@ -131,9 +142,6 @@ namespace MyZone.Structs
         [NotNull] 
         [MaxLength(255)]
         public string u_email { get; set; }
-        [NotNull]
-        [MaxLength(255)]
-        public string u_phone_number { get; set; }
         [NotNull]
         [MaxLength(50)]
         public string u_rights { get; set; }

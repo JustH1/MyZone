@@ -2,9 +2,26 @@
 @model MyZone.Pages.CatalogViewModel
 @{
 }
-@foreach (var product in Model.products)
-{
-    <div class="product">
-        <img src="" alt="">
-    </div>
-}
+<div>
+    @if (Model.count != int.MinValue)
+    {
+        @foreach (var product in Model.products)
+        {
+            <div class="product">
+                <h4>@product.pr_name</h4>
+                <h4>@product.pr_price</h4>
+                <h4>@product.pr_rating</h4>
+                <h4>@product.pr_number_of_reviews</h4>
+            </div>
+        }
+        @if (Model.count != int.MaxValue)
+        {
+            <button href="/CatalogView?category_id=@Model.category_id&startID=@(Model.count)">Далее</button>
+            <button href="/CatalogView?category_id=@Model.category_id&startID=@(Model.count)">Назад</button>
+        }
+    }
+    else
+    {
+        <h3>Товаров в данной категории не найдено.</h3>
+    }
+</div>

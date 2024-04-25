@@ -2,3 +2,33 @@
 @model MyZone.Pages.PersonalAccountPageModel
 @{
 }
+
+@if (Model.check == true)
+{
+    <div>
+        <div class="left">
+            <h3>Линчная информация</h3>
+            <h4>Почта: @Model.user.u_email</h4>
+            <h4>Дата регистрации: @Model.user.u_date_account_creation</h4>
+        </div>
+        <div class="right">
+            <div class="Orders">
+                <h3>Мои заказы</h3>
+                <ul>
+                    @foreach (var item in Model.orders)
+                    {
+                        <li>
+                            <h4>Номер: @item.o_id</h4>
+                            <h4>Дата создания: @item.o_date_creation</h4>
+                            <h4>Статус: @item.o_status</h4>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>    
+}
+else
+{
+    <a href="AuthorizationPage"><h2>Авторизируйтесь или пройдите регистрацию</h2></a>
+}

@@ -10,8 +10,7 @@ namespace MyZone
 
             builder.Services.AddRazorPages();
 
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => options.LoginPath = "/AuthorizationPage");
-            builder.Services.AddAuthentication();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
             builder.Services.AddTransient<MyZoneDbContext>();//
 
@@ -27,6 +26,7 @@ namespace MyZone
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseAuthentication();
             app.MapRazorPages();
             app.Run();
         }

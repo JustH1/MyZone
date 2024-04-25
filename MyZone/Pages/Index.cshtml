@@ -1,0 +1,14 @@
+﻿@page
+@model MyZone.Pages.IndexPage
+@{
+    ViewData["Title"] = "MyZone";
+}
+<h2>Каталог</h2>
+<ul class="catalog">
+    @foreach (var category in Model.catalog)
+    {
+        <li>
+            <a href="/CatalogView?category_id=@category.c_id&startID=0"><h4>@category.c_name</h4></a>
+        </li>
+    }
+</ul>

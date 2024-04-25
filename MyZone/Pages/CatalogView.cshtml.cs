@@ -6,16 +6,33 @@ namespace MyZone.Pages
 {
     public class CatalogViewModel : PageModel
     {
+        private MyZoneDbContext db;
+        public string category_id;
         public List<product> products { get; set; }
-        public void OnGet(string category, int StartID)
+        public int count { get; set; }
+
+        public CatalogViewModel(MyZoneDbContext db)
         {
-            if (category != null)
+            this.db = db;
+        }
+		public void OnGet(string category_id, int startID)
+        {
+            this.category_id = category_id;
+            var products = db.product.Where(p => p.catalog_id == Convert.ToInt32(category_id)).ToList();
+            if (products.Count == 0)
             {
-                //запрос и заполнение в бд
-            }
+                count = int.MinValue;
+			}
+            else if (startID + 30 > products.Count)
+            {
+				count = int.MaxValue;
+				this.products = products.GetRange(startID, products.Count);
+			}
             else
             {
-            }
+				this.products = products.GetRange(startID, startID + 30);
+				count = startID + 30;
+			}
         }
     }
 }
