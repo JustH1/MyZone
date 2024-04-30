@@ -38,7 +38,7 @@ namespace MyZone.Pages
                         {
                             u_name = name,
                             u_email = email,
-                            u_date_account_creation = DateTime.Now.ToString(),
+                            u_date_account_creation = DateTime.UtcNow,
                             u_passwd = HashPasswd(passwd),
                             u_rights = "user"
                         };
@@ -67,6 +67,7 @@ namespace MyZone.Pages
             }
             catch (Exception ex)
             {
+                logger.LogError(ex.Message);
                 return StatusCode(500);                 
             }
         }

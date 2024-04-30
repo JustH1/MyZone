@@ -1,0 +1,182 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 150vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: rgb(30,34,46);
+    display: flex;
+}
+
+.panel{
+    padding: 10px;
+    color:  white;
+    justify-content: center;
+    text-align: center;
+    display: block;
+    height: 100%;
+    background-color: rgb(40,42,63);
+    margin-right: 3%;
+}
+.panel div{
+    display: inline-block;
+}
+.panel h5{
+    transition: color 0.3s, transform 0.3s;
+    cursor: pointer;
+    color: rgb(100,102,123);
+}
+.panel h5:hover{
+    color: white;
+    transform: translateY(-5px);
+}
+#exit{
+    position: relative;
+    margin-top: auto;
+    color: rgb(225, 59, 89);
+}
+
+.mainPanel{
+    width: 96%;
+    font-weight: 600;
+}
+.infoPanel{
+    background-color: rgb(40,42,63);
+    padding: 10px;
+    margin-bottom: 10px;
+    padding-left: 30px;
+    border-radius: 10px;
+    max-width: 700px;
+    display:flex;
+}
+.info{
+    margin-right: auto;
+}
+
+#increment{
+    color: rgb(55,109,99);
+}
+
+.piechart {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+}
+
+.sub_container {
+    color: rgb(245,249,255);
+    margin-top: 10px;
+    width: 90%;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.topPanel {
+    width: 91%;
+    border-radius: 10px 10px 0px 0px;
+    padding: 3%;
+    background-color: rgb(40,42,63);
+    display: flex;
+    border-bottom: 2px solid ;
+}
+
+.topPanel form {
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    margin-left: 0;
+}
+
+.topPanel form input {
+    width: 60%;
+    height: 30px;
+    border-right: 0;
+    border: 2px solid rgb(56,173,156);
+    border-radius: 5px;
+    outline: none;
+    padding-left: 10px;
+    background: rgb(40,42,63);
+    color: #9E9C9C;
+}
+
+
+.topPanel form button {
+    width: 15%;
+    height: 35px;
+    margin-left: -3px;
+    margin-top: 0.5px;
+    margin-right: auto;
+    margin-bottom: 2px;
+    border: none;
+    color: rgb(245,249,255);
+    background: rgb(56,173,156);
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+.topPanel form button:hover{
+    background-color: rgba(56, 173, 155, 0.614);
+}
+
+.topPanel form select{
+    width: 15%;
+    margin-top: 0.5px;
+    color: rgb(245,249,255);
+    border-radius: 5px;
+    font-weight: 600;
+    border: 2px solid rgb(56,173,156);
+    background-color: rgb(40,42,63);
+    height: 33px;
+}
+.topPanel button {
+    width: 10%;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: red;
+    margin-left: auto;
+}
+.downPanel{
+    margin-top: 0%;
+    height: 100vh;
+    border-radius:0px 0px 10px 10px;
+    width: 95%;
+    padding: 1%;
+    background-color: rgb(40,42,63);
+    display: flex;
+    justify-content: center;
+}
+
+.downPanel input {
+    margin-bottom: 10px;
+    border-radius: 5px;
+    width: 90%;
+    border-right: 0;
+    color:rgb(245,249,255);
+    border: 2px solid rgb(56,173,156);
+    border-radius: 5px;
+    outline: none;
+    background: rgb(40,42,63);
+    height: 25px;
+}
+#sendInput{
+    width: 92%;
+    font-weight: 600;
+    background-color: rgb(56,173,156);
+}
+.downPanel p{
+    margin-top: 0;
+    width: 90%;
+    margin-bottom: 10px;
+}
+#writePasswd{
+    margin-top: 15px;
+}
+#statisticsPanelButton{
+    color : white;
+}
+.none {
+    display: none;
+}
+

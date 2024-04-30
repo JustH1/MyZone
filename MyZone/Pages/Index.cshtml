@@ -8,7 +8,7 @@
     @foreach (var category in Model.catalog)
     {
         <li>
-            <a href="/CatalogView?category_id=@category.c_id&startID=0"><h4>@category.c_name</h4></a>
+            <a href="/CatalogView?handler=ByCategory&category_id=@category.c_id&startID=0"><h4>@category.c_name</h4></a>
         </li>
     }
 </ul>

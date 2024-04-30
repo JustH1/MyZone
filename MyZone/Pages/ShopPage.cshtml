@@ -1,9 +1,14 @@
 ﻿@page
 @model MyZone.Pages.ShopPageModel
 @{
+    ViewData["Title"] = "ShopPage";
 }
-<h3></h3>
-<h5></h5>
-<h5></h5>
-<h5></h5>
-<h5></h5>
+<div>
+    <h6>@Model.shop.sh_id</h6>
+    <h3>@Model.shop.sh_name</h3>
+    <h5>@Model.shop.sh_email</h5>
+    <h5>@Model.shop.sh_rating</h5>
+    <h5>@Model.shop.sh_date_creation</h5>
+    <h4><a href="/CatalogView?handler=ByShop&requiredID=@Model.shop.sh_id&startID=0">Просмотр товаров магазина.</a></h4>
+</div>
+

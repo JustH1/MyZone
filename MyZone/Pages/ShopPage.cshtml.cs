@@ -8,8 +8,9 @@ namespace MyZone.Pages
     public class ShopPageModel : PageModel
     {
         public bool check { get; set; }
-        public shop shop { get; set; }
-        public List<product> products { get; set; }
+        public shop? shop { get; set; } = null;
+        public List<product> products { get; set; } = null;
+        public List<order> orders { get; set; } = null;
 
         private MyZoneDbContext db;
         private ILogger<Program> logger;
@@ -21,27 +22,37 @@ namespace MyZone.Pages
         public async Task<IActionResult> OnGet(string shopID)
         {
             IIdentity? userIdentity = HttpContext.User.Identity;
+            shop = db.shop.FirstOrDefault(p => p.sh_id.ToString() == shopID);
 
-            if (userIdentity != null && userIdentity.IsAuthenticated &&
-                db.shop.Where(p => p.u_id.ToString() == userIdentity.Name).First() != null)
+            if (shop != null)
             {
-                shop = db.shop.FirstOrDefault(p => p.sh_id.ToString() == shopID);
+                if (ÑheckingSeller(userIdentity, ref shopID, shop))
+                {
+                    products = db.product.Where(p => p.pr_shop_id.ToString() == shopID).ToList();
+                    orders = db.order.Where(p => p..ToString() == );
+                    return Page();
 
-                if (shop == null)
+                }
+                else
                 {
                     return StatusCode(404);
                 }
-
-                products = db.product.Where(p => p.pr_shop_id.ToString() == shopID).ToList();
-
-                return Page();
-                
             }
             else
             {
                 return StatusCode(404);
             }
         }
-        
+        private bool ÑheckingSeller(IIdentity userIdentity, ref string shopID, shop shop)
+        {
+            if (userIdentity != null && userIdentity.IsAuthenticated && shop.u_id.ToString() == userIdentity.Name)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

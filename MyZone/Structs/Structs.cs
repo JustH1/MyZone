@@ -16,13 +16,13 @@ namespace MyZone.Structs
         [Key]
         public int r_id { get; set; }
         public string r_name_author { get; set; }
-        public int r_item_id { get; set; }
-        public int r_type { get; set; }
+        public int r_pr_id { get; set; }
+        public string r_type { get; set; }
         public string r_advantages { get; set; }
         public string r_disadvantages { get; set; }
         public string r_comments { get; set; }
         public double r_rating { get; set; }
-        public string r_date_writing { get; set; }
+        public DateTime r_date_writing { get; set; }
     }
     [Keyless]
     public class user_order
@@ -56,12 +56,8 @@ namespace MyZone.Structs
         public int u_id { get; set; }
         [MaxLength(50)]
         public string o_status { get; set; }
-        [MaxLength(50)]
-        public string o_date_creation { get; set; }
-        [MaxLength(50)]
-        public string? o_deli_date { get; set; }
-        [MaxLength(50)]
-        public int o_days_road { get; set; }
+        public DateTime o_date_creation { get; set; }
+        public DateTime? o_deli_date { get; set; }
     }
     [Keyless]
     public class order_pickuppoint
@@ -116,7 +112,7 @@ namespace MyZone.Structs
         [NotNull]
         public int sh_id { get; set; }
         public string sh_name { get; set; }
-        public string sh_date_creation { get; set; }
+        public DateTime? sh_date_creation { get; set; }
         public double sh_rating { get; set; }
         public string sh_email { get; set; }
         public string sh_phone_number { get; set; }
@@ -146,7 +142,8 @@ namespace MyZone.Structs
         [MaxLength(50)]
         public string u_rights { get; set; }
         [NotNull]
-        public string u_date_account_creation { get; set; }
+        public DateTime u_date_account_creation { get; set; }
+        [NotNull]
         public string u_passwd { get; set; }
     }
 }

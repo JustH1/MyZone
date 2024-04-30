@@ -1,4 +1,315 @@
 ﻿@page
 @model MyZone.Pages.AdminPageModel
 @{
+    ViewData["Title"] = "AdminPage";
+    Layout = "";
 }
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/AdminPage.css">
+    <script src="~/js/AdminPage.js" defer></script>
+
+</head>
+<body>
+    <div class="panel">
+        <h2>Admin panel</h2>
+        <div>
+            <h5 id="statisticsPanelButton">Статистика</h5>
+            <h5 id="searchingChangingDataButton">Поиск и изменение данных</h5>
+        </div>
+        <h5 id="exit"><a href="Index">Выйти</a></h5>
+    </div>
+    <div class="sub_container">
+        @if (Model.isFound == true)
+        {
+            <div style="display:none" id="statisticsPanel">
+                <div class="mainPanel">
+                    @{
+                        double userGrowth = Math.Round((Model.statistics["usersNew"] / Model.statistics["usersAll"]) * 100);
+                        double orderGrowth =Math.Round((Model.statistics["orderNew"] / Model.statistics["orderAll"]) * 100);
+                        double shopGrowth = Math.Round((Model.statistics["shopNew"] / Model.statistics["shopAll"]) * 100);
+                    }
+                    <div class="infoPanel">
+                        <div class="info">
+                            <h2>Пользователи</h2>
+                            <div class="subInfo">
+                                <p>Количество: @Model.statistics["usersAll"]</p>
+                                <p>Новых (последняя неделя): @Model.statistics["usersNew"]</p>
+                                <p id="increment">Прирост: @userGrowth%</p>
+                            </div>
+                        </div>
+                        <div class="graph">
+                            <h3>Диаграмма прироста</h3>
+                            <div style="background-image: conic-gradient(rgb(55,109,99) @userGrowth%,rgb(245,249,255) 0 @(100 - userGrowth)%)" class="piechart"></div>
+                        </div>
+                    </div>
+                    <div class="infoPanel">
+                        <div class="info">
+                            <h2>Магазины</h2>
+                            <div class="subInfo">
+                                <p>Количество: @Model.statistics["shopAll"]</p>
+                                <p>Новых (последняя неделя): @Model.statistics["shopNew"]</p>
+                                <p id="increment">Прирост: @shopGrowth%</p>
+                            </div>
+                        </div>
+                        <div class="graph">
+                            <h3>Диаграмма прироста</h3>
+                            <div style="background-image: conic-gradient(rgb(55,109,99) @shopGrowth%,rgb(245,249,255) 0 @(100 - shopGrowth)%)" class="piechart"></div>
+                        </div>
+                    </div>
+                    <div class="infoPanel">
+                        <div class="info">
+                            <h2>Заказы</h2>
+                            <div class="subInfo">
+                                <p>Количество: @Model.statistics["orderAll"]</p>
+                                <p>Новых (последняя неделя): @Model.statistics["orderNew"]</p>
+                                <p id="increment">Прирост: @orderGrowth%</p>
+                            </div>
+                        </div>
+                        <div class="graph">
+                            <h3>Диаграмма прироста</h3>
+                            <div style="background-image: conic-gradient(rgb(55,109,99) @orderGrowth%,rgb(245,249,255) 0 @(100 - orderGrowth)%)" class="piechart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="searchingChangingData">
+                <div class="topPanel">
+                    <form class="formSearch" method="post">
+                        <input type="text" name="id" placeholder="Required id">
+                        <button formaction="/AdminPage?handler=Search" type="submit">Найти</button>
+                        <select id="choosingEntity" name="choosingEntity">
+                            <option value="user">User</option>
+                            <option value="order">Order</option>
+                            <option value="reviews">Reviews</option>
+                        </select>
+                    </form>
+                </div>
+
+                <div class="downPanel">
+                    <div>
+                        @if (Model.isFound == true)
+                        {
+                            <h2>Найденая информация для изменения</h2>
+
+                            if (Model.user != null)
+                            {
+                                <form id="formChangeUser" method="post">
+                                    <p>Информация о пользователе №@Model.user.u_id</p>
+                                    <input name="id" value="@Model.user.u_id" readonly>
+                                    <input type="text" name="newName" placeholder="Name" value="@Model.user.u_name">
+                                    <input type="text" name="newEmail" placeholder="Email" value="@Model.user.u_email">
+                                    <input type="text" name="newRights" placeholder="Rights" value="@Model.user.u_rights">
+                                    <p>Дата создания аккаунта: @Model.user.u_date_account_creation.ToShortDateString()</p>
+                                    <input name="confirmationPassword" id="writePasswd" type="text"
+                                           placeholder="Введите ваш пароль для подтверждения действия.">
+                                    <input id="sendInput" formaction="/AdminPage?handler=ChangeUser" type="submit" value="Изменить">
+                                </form>
+                            }
+
+                            else if (Model.order != null)
+                            {
+                                <form id="formChangeOrder" method="post">
+                                    <p>Информация о заказе №@Model.order.o_id</p>
+                                    <input name="id" value="@Model.order.o_id" readonly>
+                                    <p>Общая сумма: @Model.order.o_price</p>
+                                    <p>ID покупателя: @Model.order.u_id</p>
+                                    <input name="newStatus" placeholder="Status" value="@Model.order.o_status">
+                                    <p>Дата создания заказа: @Model.order.o_date_creation.ToShortDateString()</p>
+                                    @{
+                                        int daysOnTheRoad = (DateTime.Now - Model.order.o_date_creation).Days;
+                                    }
+                                    <p>Дней в пути: @daysOnTheRoad</p>
+
+                                    @if (Model.order.o_deli_date == null)
+                                    {
+                                        <p>Дата доставки: @Model.order.o_deli_date.Value.ToShortDateString()</p>
+                                    }
+                                    else
+                                    {
+                                        <p>Дата доставки: Ещё в пути.</p>
+                                    }
+                                    <input name="confirmationPassword" id="writePasswd" type="text"
+                                           placeholder="Введите ваш пароль для подтверждения действия.">
+                                    <input id="sendInput" formaction="/AdminPage?handler=ChangeOrder" type="submit" value="Изменить">
+                                </form>
+                            }
+                            else if (Model.reviews != null)
+                            {
+                                <form id="formChangeReviews"  method="post">
+                                    <p>Информация о отзыве №@Model.reviews.r_id</p>
+                                    <input name="id" value="@Model.reviews.r_id" readonly>
+                                    <p>Имя автора: @Model.reviews.r_name_author</p>
+                                    <p>ID тоавара: @Model.reviews.r_pr_id</p>
+                                    <p>Тип отзыва: @Model.reviews.r_type</p>
+                                    <input name="newAdvantages" placeholder="Advantages" value="@Model.reviews.r_advantages">
+                                    <input name="newDisadvantages" placeholder="Disadvantages" value="@Model.reviews.r_disadvantages">
+                                    <input name="newComments" placeholder="Comments" value="@Model.reviews.r_comments">
+                                    <p>Рейтинг: @Model.reviews.r_rating</p>
+                                    <p>Дата написания: @Model.reviews.r_date_writing.ToShortDateString()</p>
+                                    <input name="confirmationPassword" id="writePasswd" type="text"
+                                           placeholder="Введите ваш пароль для подтверждения действия.">
+                                    <input id="sendInput" formaction="/AdminPage?handler=ChangeReviews" type="submit" value="Изменить">
+                                </form>
+                            }
+                        }
+                        else
+                        {
+                            <h2>Информация не найдена.</h2>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div id="statisticsPanel">
+                <div class="mainPanel">
+                    @{
+                        double userGrowth = Math.Round((Model.statistics["usersNew"] / Model.statistics["usersAll"]) * 100);
+                        double orderGrowth = Math.Round((Model.statistics["orderNew"] / Model.statistics["orderAll"]) * 100);
+                        double shopGrowth = Math.Round((Model.statistics["shopNew"] / Model.statistics["shopAll"]) * 100);
+                    }
+                    <div class="infoPanel">
+                        <div class="info">
+                            <h2>Пользователи</h2>
+                            <div class="subInfo">
+                                <p>Количество: @Model.statistics["usersAll"]</p>
+                                <p>Новых (последняя неделя): @Model.statistics["usersNew"]</p>
+                                <p id="increment">Прирост: @userGrowth%</p>
+                            </div>
+                        </div>
+                        <div class="graph">
+                            <h3>Диаграмма прироста</h3>
+                            <div style="background-image: conic-gradient(rgb(55,109,99) @userGrowth%,rgb(245,249,255) 0 @(100 - userGrowth)%)" class="piechart"></div>
+                        </div>
+                    </div>
+                    <div class="infoPanel">
+                        <div class="info">
+                            <h2>Магазины</h2>
+                            <div class="subInfo">
+                                <p>Количество: @Model.statistics["shopAll"]</p>
+                                <p>Новых (последняя неделя): @Model.statistics["shopNew"]</p>
+                                <p id="increment">Прирост: @shopGrowth%</p>
+                            </div>
+                        </div>
+                        <div class="graph">
+                            <h3>Диаграмма прироста</h3>
+                            <div style="background-image: conic-gradient(rgb(55,109,99) @shopGrowth%,rgb(245,249,255) 0 @(100 - shopGrowth)%)" class="piechart"></div>
+                        </div>
+                    </div>
+                    <div class="infoPanel">
+                        <div class="info">
+                            <h2>Заказы</h2>
+                            <div class="subInfo">
+                                <p>Количество: @Model.statistics["orderAll"]</p>
+                                <p>Новых (последняя неделя): @Model.statistics["orderNew"]</p>
+                                <p id="increment">Прирост: @orderGrowth%</p>
+                            </div>
+                        </div>
+                        <div class="graph">
+                            <h3>Диаграмма прироста</h3>
+                            <div style="background-image: conic-gradient(rgb(55,109,99) @orderGrowth%,rgb(245,249,255) 0 @(100 - orderGrowth)%)" class="piechart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display:none" id="searchingChangingData">
+                <div class="topPanel">
+                    <form class="formSearch" method="post">
+                        <input type="text" name="id" placeholder="Required id">
+                        <button formaction="/AdminPage?handler=Search" type="submit">Найти</button>
+                        <select id="choosingEntity" name="choosingEntity">
+                            <option value="user">User</option>
+                            <option value="order">Order</option>
+                            <option value="reviews">Reviews</option>
+                        </select>
+                    </form>
+                </div>
+
+                <div class="downPanel">
+                    <div>
+                        @if (Model.isFound == true)
+                        {
+                            <h2>Найденая информация для изменения</h2>
+
+                            if (Model.user != null)
+                            {
+                                <form id="formChangeUser" method="post">
+                                    <p>Информация о пользователе №@Model.user.u_id</p>
+                                    <input name="id" value="@Model.user.u_id" readonly>
+                                    <input type="text" name="newName" placeholder="Name" value="@Model.user.u_name">
+                                    <input type="text" name="newEmail" placeholder="Email" value="@Model.user.u_email">
+                                    <input type="text" name="newRights" placeholder="Rights" value="@Model.user.u_rights">
+                                    <p>Дата создания аккаунта: @Model.user.u_date_account_creation.ToShortDateString()</p>
+                                    <input name="confirmationPassword" id="writePasswd" type="text"
+                                           placeholder="Введите ваш пароль для подтверждения действия.">
+                                    <input id="sendInput" formaction="/AdminPage?handler=ChangeUser" type="submit" value="Изменить">
+                                </form>
+                            }
+
+                            else if (Model.order != null)
+                            {
+                                <form id="formChangeOrder" method="post">
+                                    <p>Информация о заказе №@Model.order.o_id</p>
+                                    <input name="id" value="@Model.order.o_id" readonly>
+                                    <p>Общая сумма: @Model.order.o_price</p>
+                                    <p>ID покупателя: @Model.order.u_id</p>
+                                    <input name="newStatus" placeholder="Status" value="@Model.order.o_status">
+                                    <p>Дата создания заказа: @Model.order.o_date_creation.ToShortDateString()</p>
+                                    @{
+                                        int daysOnTheRoad = (DateTime.Now - Model.order.o_date_creation).Days;
+                                    }
+                                    <p>Дней в пути: @daysOnTheRoad</p>
+
+                                    @if (Model.order.o_deli_date == null)
+                                    {
+                                        <p>Дата доставки: @Model.order.o_deli_date.Value.ToShortDateString()</p>
+                                    }
+                                    else
+                                    {
+                                        <p>Дата доставки: Ещё в пути.</p>
+                                    }
+                                    <input name="confirmationPassword" id="writePasswd" type="text"
+                                           placeholder="Введите ваш пароль для подтверждения действия.">
+                                    <input id="sendInput" formaction="/AdminPage?handler=ChangeOrder" type="submit" value="Изменить">
+                                </form>
+                            }
+                            else if (Model.reviews != null)
+                            {
+                                <form id="formChangeReviews" method="post">
+                                    <p>Информация о отзыве №@Model.reviews.r_id</p>
+                                    <input name="id" value="@Model.reviews.r_id" readonly>
+                                    <p>Имя автора: @Model.reviews.r_name_author</p>
+                                    <p>ID тоавара: @Model.reviews.r_pr_id</p>
+                                    <p>Тип отзыва: @Model.reviews.r_type</p>
+                                    <input name="newAdvantages" placeholder="Advantages" value="@Model.reviews.r_advantages">
+                                    <input name="newDisadvantages" placeholder="Disadvantages" value="@Model.reviews.r_disadvantages">
+                                    <input name="newComments" placeholder="Comments" value="@Model.reviews.r_comments">
+                                    <p>Рейтинг: @Model.reviews.r_rating</p>
+                                    <p>Дата написания: @Model.reviews.r_date_writing.ToShortDateString()</p>
+                                    <input name="confirmationPassword" id="writePasswd" type="text"
+                                           placeholder="Введите ваш пароль для подтверждения действия.">
+                                    <input id="sendInput" formaction="/AdminPage?handler=ChangeReviews" type="submit" value="Изменить">
+                                </form>
+                            }
+                        }
+                        else
+                        {
+                            <h2>Информация не найдена.</h2>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>
+
+
+

@@ -16,8 +16,8 @@
         }
         @if (Model.count != int.MaxValue)
         {
-            <button href="/CatalogView?category_id=@Model.category_id&startID=@(Model.count)">Далее</button>
-            <button href="/CatalogView?category_id=@Model.category_id&startID=@(Model.count)">Назад</button>
+            <button href="/CatalogView?handler=@Model.handler&requiredID=@Model.requiredID&startID=@(Model.count)">Далее</button>
+            <button href="/CatalogView?handler=@Model.handler&requiredID=@Model.requiredID&startID=@(Model.count)">Назад</button>
         }
     }
     else
