@@ -2,3 +2,14 @@
 @model MyZone.Pages.ProductPageModel
 @{
 }
+<div>
+    <p>ID: @Model.product.pr_id</p>
+    <p>ID каталога: @Model.product.catalog_id</p>
+    <h2>@Model.product.pr_name</h2>
+    <h4>Цена: @Model.product.pr_price</h4>
+    <h4>Характеристики: @Model.product.pr_characteristics</h4>
+    <h4>Описание: @Model.product.pr_description</h4>
+    <h4>Рейтинг: @Model.product.pr_rating</h4>
+    <a href="/BasketPage?handler=AddPoint&productId=@Model.product.pr_id&shopId=@Model.product.pr_shop_id">Добавить товар в карзину.</a>
+</div>
+

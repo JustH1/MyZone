@@ -24,61 +24,51 @@ namespace MyZone.Structs
         public double r_rating { get; set; }
         public DateTime r_date_writing { get; set; }
     }
-    [Keyless]
-    public class user_order
+    public class basket
     {
+        [Key]
+        public int id { get; set; }
         [NotNull]
-        public int u_id { get; set; }
+        public int b_u_id { get; set; }
         [NotNull]
-        public int o_id { get; set; }
+        public int b_pr_id { get; set; }
+        [NotNull]
+        public decimal b_cost_product { get; set; }
+        [NotNull]
+        public string b_pr_name { get ; set; }
+        [NotNull]
+        public int b_sh_id { get; set; }
     }
-    [Keyless]
-    public class order_shop
-    {
-        [NotNull]
-        public int o_id { get; set; }
-        [NotNull]
-        public string sh_id { get; set; }
-    }
-    [Keyless]
     public class order_product
     {
+        [Key]
+        public int id { get; set; }        
         [NotNull]
-        public int r_id { get; set; }
+        public ulong o_id { get; set; }
         [NotNull]
-        public string pr_id { get; set; }
+        public int pr_id { get; set; }
+        public int quantity { get; set; }
     }
     public class order
     {
         [Key]
-        public int o_id { get; set; }
-        public double o_price { get; set; }
-        public int u_id { get; set; }
+        public ulong o_id { get; set; }
+        public decimal o_price { get; set; }
+        public int o_u_id { get; set; }
         [MaxLength(50)]
         public string o_status { get; set; }
         public DateTime o_date_creation { get; set; }
         public DateTime? o_deli_date { get; set; }
+        public int o_sh_id { get; set; }
     }
     [Keyless]
     public class order_pickuppoint
     {
         [NotNull]
-        public int o_id { get; set; }
+        public ulong o_id { get; set; }
         [NotNull]
         public string pup_id { get; set; }
     }
-    /*public class order_delivery_status
-    {
-        [Key]
-        public int o_id { get; set; }
-        [MaxLength(50)]
-        public string deli_status { get; set; }
-        public int deli_day { get; set; }
-        [MaxLength(50)]
-        public string deli_ocd { get; set; }
-        [MaxLength(50)]
-        public string deli_odd { get; set; }
-    }*/
     public class pickup_point
     {
         [Key]
@@ -100,7 +90,7 @@ namespace MyZone.Structs
         public string pr_name { get; set; }
         public string pr_description { get; set; }
         public string pr_characteristics { get; set; }
-        public double pr_price { get; set; }
+        public decimal pr_price { get; set; }
         public int pr_number_of_reviews { get; set; }
         public double pr_rating { get; set; }
         public int pr_shop_id { get; set; }
@@ -116,7 +106,7 @@ namespace MyZone.Structs
         public double sh_rating { get; set; }
         public string sh_email { get; set; }
         public string sh_phone_number { get; set; }
-        public int u_id { get; set; }
+        public int sh_u_id { get; set; }
     }
     public class user_payment_method
     {

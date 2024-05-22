@@ -1,14 +1,127 @@
-﻿@page
+﻿@page "{shopID}"
 @model MyZone.Pages.ShopPageModel
 @{
     ViewData["Title"] = "ShopPage";
+    Layout = "";
 }
-<div>
-    <h6>@Model.shop.sh_id</h6>
-    <h3>@Model.shop.sh_name</h3>
-    <h5>@Model.shop.sh_email</h5>
-    <h5>@Model.shop.sh_rating</h5>
-    <h5>@Model.shop.sh_date_creation</h5>
-    <h4><a href="/CatalogView?handler=ByShop&requiredID=@Model.shop.sh_id&startID=0">Просмотр товаров магазина.</a></h4>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/ShopPage.css">
+    <script src="~/js/ShopPage.js" defer></script>
+</head>
+
+<body>
+    <div class="mainPanel">
+        <div class="panelShopInfoAndMenu">
+            <div class="shopInfo">
+                <h6>ID магазина: @Model.shop.sh_id</h6>
+                <h3>@Model.shop.sh_name</h3>
+                <h4>Почта: @Model.shop.sh_email</h4>
+                <h4>Рейтинг: @Model.shop.sh_rating</h4>
+                <h4>Дата создания: @Model.shop.sh_date_creation</h4>
+            </div>
+            <div class="menu">
+                <h3>Меню</h3>
+                <div>
+                    <button href="">Добавить товар</button>
+                    <button href="">Выйти</button>
+                </div>
+            </div>
+        </div>
+        <div class="panelProductsAndOrders">
+            <div class="products">
+                <h3>Мои товары</h3>
+                <div id="headingProducts">
+                    <h4>ID товара</h4>
+                    <h4>Название</h4>
+                    <h4>Рейтинг</h4>
+                </div>
+                <div id="scrollProducts">
+                    @foreach (var product in Model.products)
+                    {
+                        <div>
+                            <h4>ID: <a href="/ProductPage?productId=@product.pr_id">@product.pr_id</a></h4>
+                            <h4 id="productName">@product.pr_name</h4>
+                            <h4>@product.pr_rating</h4>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="orders">
+                <h3>Мои заказы</h3>
+                <div class="scrollOrder">
+                    @foreach (var order in Model.dicOrders)
+                    {
+                        <form  method="post">
+                            <input readonly name="orderID" value="@order.Key.o_id">
+                            <h4>Цена: @order.Key.o_price</h4>
+                            <div class="statusDiv">
+                                <p>Статус</p>
+                                <select name="newStatus">
+                                    @{
+                                        string currentStatus = "";
+                                        switch (order.Key.o_status)
+                                        {
+                                            case "sentSeller":
+                                                currentStatus = "Отправлено продавцу";
+                                                break;
+                                            case "inAssembly":
+                                                currentStatus = "В сборке";
+                                                break;
+                                            case "onWay":
+                                                currentStatus = "В пути";
+                                                break;
+                                            case "atPickUpPoint":
+                                                currentStatus = "Ожидает в пункте выдачи";
+                                                break;
+                                            case "":
+                                                break;
+                                        }
+                                    }
+                                    <option value="" selected disabled>@order.Key.o_status</option>
+                                    <option value="sentSeller">Отправлено продавцу</option>
+                                    <option value="inAssembly">В сборке</option>
+                                    <option value="onWay">В пути</option>
+                                    <option value="atPickUpPoint">Ожидает в пункте выдачи</option>
+                                    <option value="received">Получено</option>
+                                </select>
+                            </div>
+                            <p id="showUlOrderProducts">Показать сставляющее заказа.</p>
+                            <ul style="display: none;" id="ulOrderProducts">
+                                @foreach (var products in order.Value)
+                                {
+                                    <li><p>ID товара: <a href="">@products.pr_id</a> Количество: 100</p></li>
+                                }
+                            </ul>
+                            <p>Дата создания: @order.Key.o_date_creation</p>
+
+                            @{
+                                int daysOnTheRoad = (DateTime.Now - order.Key.o_date_creation).Days;
+                            }
+
+                            <p>Дней в пути: @daysOnTheRoad</p>
+
+                            @if (order.Key.o_deli_date != null)
+                            {
+                                <p>Дата доставки: @order.Key.o_deli_date.Value.ToShortDateString()</p>
+                            }
+                            else
+                            {
+                                <p>Дата доставки: Ещё в пути.</p>
+                            }
+
+                            <button formaction="/ShopPage/@Model.shop.sh_id?handler=ChangeStatus" type="submit">Изменить</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
 

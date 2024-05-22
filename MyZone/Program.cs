@@ -12,7 +12,7 @@ namespace MyZone
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
-            builder.Services.AddTransient<MyZoneDbContext>();//
+            builder.Services.AddTransient<MyZoneDbContext>();
 
             var app = builder.Build();
             app.Environment.EnvironmentName = "Development";

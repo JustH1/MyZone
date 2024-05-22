@@ -118,7 +118,7 @@
                                     <p>Информация о заказе №@Model.order.o_id</p>
                                     <input name="id" value="@Model.order.o_id" readonly>
                                     <p>Общая сумма: @Model.order.o_price</p>
-                                    <p>ID покупателя: @Model.order.u_id</p>
+                                    <p>ID покупателя: @Model.order.o_u_id</p>
                                     <input name="newStatus" placeholder="Status" value="@Model.order.o_status">
                                     <p>Дата создания заказа: @Model.order.o_date_creation.ToShortDateString()</p>
                                     @{
@@ -126,7 +126,7 @@
                                     }
                                     <p>Дней в пути: @daysOnTheRoad</p>
 
-                                    @if (Model.order.o_deli_date == null)
+                                    @if (Model.order.o_deli_date != null)
                                     {
                                         <p>Дата доставки: @Model.order.o_deli_date.Value.ToShortDateString()</p>
                                     }
@@ -259,7 +259,7 @@
                                     <p>Информация о заказе №@Model.order.o_id</p>
                                     <input name="id" value="@Model.order.o_id" readonly>
                                     <p>Общая сумма: @Model.order.o_price</p>
-                                    <p>ID покупателя: @Model.order.u_id</p>
+                                    <p>ID покупателя: @Model.order.o_u_id</p>
                                     <input name="newStatus" placeholder="Status" value="@Model.order.o_status">
                                     <p>Дата создания заказа: @Model.order.o_date_creation.ToShortDateString()</p>
                                     @{

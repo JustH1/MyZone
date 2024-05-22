@@ -17,7 +17,8 @@ namespace MyZone.Pages
         {
             this.db = db;
         }
-		public async Task<IActionResult> OnGetByCategory(string requiredID, int startID)
+
+		public IActionResult OnGetByCategory(string requiredID, int startID)
         {
             handler = "ByCategory";
 
@@ -29,33 +30,26 @@ namespace MyZone.Pages
 
             return Page();
         }
-        public async Task<IActionResult> OnGetByShop(string requiredID, int startID)
-        {
-            handler = "ByShop";
-
-            this.requiredID = requiredID;
-
-            var products = db.product.Where(p => p.pr_shop_id.ToString() == requiredID).ToList();
-
-            GetCurrentProductsList(products, startID);
-
-            return Page();
-        }
+        /// <summary>
+        /// A function for displaying products in the catalog in portions (10 items each).
+        /// </summary>
+        /// <param name="products"></param>
+        /// <param name="startID"></param>
         private void GetCurrentProductsList(List<product> products, int startID)
         {
             if (products.Count == 0)
             {
                 count = int.MinValue;
             }
-            else if (startID + 30 > products.Count)
+            else if (startID + 10 > products.Count)
             {
                 count = int.MaxValue;
                 this.products = products.GetRange(startID, products.Count);
             }
             else
             {
-                this.products = products.GetRange(startID, startID + 30);
-                count = startID + 30;
+                this.products = products.GetRange(startID, startID + 10);
+                count = startID + 10;
             }
         }
     }

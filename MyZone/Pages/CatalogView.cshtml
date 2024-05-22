@@ -8,7 +8,7 @@
         @foreach (var product in Model.products)
         {
             <div class="product">
-                <h4>@product.pr_name</h4>
+                <h4><a href="/ProductPage?productId=@product.pr_id">@product.pr_name</a></h4>
                 <h4>@product.pr_price</h4>
                 <h4>@product.pr_rating</h4>
                 <h4>@product.pr_number_of_reviews</h4>

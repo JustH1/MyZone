@@ -4,7 +4,26 @@
     ViewData["Title"] = "Basket";
 }
 
-<h2>Корзина</h2>
-<ul class="basket">
-    
-</ul>
+<div>
+    @if (Model.checkAuthorization)
+    {
+        <h2>Моя корзина</h2>
+        <ul class="basket">
+            @foreach (var item in Model.basketList)
+            {
+                <li>
+                    <p><a href="/ProductPage?productId=@item.b_pr_id">@item.b_pr_id</a></p>
+                    <p>@item.b_pr_name</p>
+                    <p>Цена: @item.b_cost_product</p>
+                    <a href="/BasketPage?handler=DeletePoint&pointId=@item.id">Убрать товар.</a>
+                </li>
+            }
+        </ul>
+        <a href="/BasketPage?handler=CreateOrder">Заказать и оплатить.</a>
+    }
+    else
+    {
+        <h2><a href="/AuthorizationPage"></a></h2>
+    }
+</div>
+

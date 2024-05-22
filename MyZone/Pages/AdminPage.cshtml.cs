@@ -22,7 +22,7 @@ namespace MyZone.Pages
         public reviews? reviews { get; set; } = null;
         public bool isFound { get; set; } = false;
         /// </summary>
-
+       
         public AdminPageModel(MyZoneDbContext db, ILogger<Program> logger)
         {
             this.db = db;
@@ -42,7 +42,7 @@ namespace MyZone.Pages
         /// <summary>
         /// Function for getting statistics data. The collection is carried out in the last 7 days.
         /// For User, Order and reviews entities.
-        private async void GettingStatistics()
+        private void GettingStatistics()
         {
             statistics = new Dictionary<string, double>
             {
@@ -55,9 +55,14 @@ namespace MyZone.Pages
             };
 
         }
-        /// </summary>
 
-        public async Task<IActionResult> OnPostSearch(int id, string choosingEntity)
+        /// <summary>
+        /// Searches for the desired entity in the database.    
+        /// </summary>
+        /// <param name="id">The ID of the entity.</param>
+        /// <param name="choosingEntity">The selected entity.</param>
+        /// <returns></returns>
+        public IActionResult OnPostSearch(ulong id, string choosingEntity)
         {
             try
             {
@@ -66,7 +71,7 @@ namespace MyZone.Pages
                     switch (choosingEntity)
                     {
                         case "user":
-                            user = db.users.FirstOrDefault(p => p.u_id == id);
+                            user = db.users.FirstOrDefault(p => p.u_id == (int)id);
                             if (user != null) { isFound = true; }
                             break;
                         case "order":
@@ -74,10 +79,11 @@ namespace MyZone.Pages
                             if (order != null) { isFound = true; }
                             break;
                         case "reviews":
-                            reviews = db.reviews.FirstOrDefault(p => p.r_id == id);
+                            reviews = db.reviews.FirstOrDefault(p => p.r_id == (int)id);
                             if (reviews != null) { isFound = true; }
                             break;
                     }
+                    GettingStatistics();
                     return Page();
                 }
                 else
@@ -95,7 +101,7 @@ namespace MyZone.Pages
 
 
         //For change User.
-        public async Task<IActionResult> OnPostChangeUser(int id, string newName, string newEmail, string newRights, string confirmationPassword)
+        public IActionResult OnPostChangeUser(int id, string newName, string newEmail, string newRights, string confirmationPassword)
         {
             try
             {
@@ -105,6 +111,7 @@ namespace MyZone.Pages
                     users.u_name = newName;
                     users.u_email = newEmail;
                     users.u_rights = newRights;
+                    GettingStatistics();
 
                     db.SaveChanges();
                     return Page();
@@ -121,7 +128,7 @@ namespace MyZone.Pages
             }
         }
         //For change Order
-        public async Task<IActionResult> OnPostChangeOrder(int id, string newStatus, string confirmationPassword)
+        public IActionResult OnPostChangeOrder(ulong id, string newStatus, string confirmationPassword)
         {
             try
             {
@@ -129,6 +136,7 @@ namespace MyZone.Pages
                 {
                     order order = db.order.FirstOrDefault(p => p.o_id == id);
                     order.o_status = newStatus;
+                    GettingStatistics();
 
                     db.SaveChanges();
 
@@ -147,7 +155,7 @@ namespace MyZone.Pages
         }
         //For change Reviews
 
-        public async Task<IActionResult> OnPostChangeReviews(int id, string newAdvantages, string newDisadvantages, string newComments, string confirmationPassword)
+        public IActionResult OnPostChangeReviews(int id, string newAdvantages, string newDisadvantages, string newComments, string confirmationPassword)
         {
             try
             {
@@ -157,6 +165,8 @@ namespace MyZone.Pages
                     reviews.r_advantages = newAdvantages;
                     reviews.r_disadvantages = newDisadvantages;
                     reviews.r_comments = newComments;
+                    GettingStatistics();
+
 
                     db.SaveChanges();
                     return Page();
