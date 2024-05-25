@@ -1,0 +1,50 @@
+﻿@page
+@model MyZone.Pages.ReportPageModel
+@{
+}
+
+<div>
+    <h1>Отчёт по заказам.</h1>
+    <br>
+    <h3>Количество заказов за последнюю неделю.</h3>
+    <table>
+        <tr>
+            <td>День недели</td> <td>Количество заказов</td>
+        </tr>
+        <tr>
+
+        </tr>
+    </table>
+
+    <h3>Количество заказов по ценовому объёму.</h3>
+    <table>
+
+    </table>
+
+    <div id="paymentsChartContainer" style="height: 400px; width: 100%;"></div>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var chart = Highcharts.chart('paymentsChartContainer', {
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: 'График платежей по датам'
+                },
+                xAxis: {
+                    categories: []
+                },
+                yAxis: {
+                    title: {
+                        text: 'Сумма платежа'
+                    }
+                },
+                series: [{
+                    name: 'Сумма',
+                    data: [10.1,200,10000,200,500,100]
+                }]
+            });
+        });
+    </script>
+</div>

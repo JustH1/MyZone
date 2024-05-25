@@ -6,6 +6,7 @@ namespace MyZone
 {
     public class MyZoneDbContext : DbContext
     {
+        public DbSet<reportDayOrder> reportDayOrders { get; set; } = null!;
         public DbSet<users> users { get; set; } = null!;
         public DbSet<basket> basket { get; set; } = null!;
         public DbSet<user_payment_method> user_payment_method { get; set; } = null!;
@@ -22,6 +23,10 @@ namespace MyZone
         public MyZoneDbContext()
         {
             Database.EnsureCreated();
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<reportDayOrder>().HasNoKey();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

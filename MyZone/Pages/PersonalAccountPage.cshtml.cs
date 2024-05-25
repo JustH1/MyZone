@@ -25,17 +25,17 @@ namespace MyZone.Pages
             if (userIdentity != null && userIdentity.IsAuthenticated)
             {
                 check = true;
-                GetData(userIdentity.Name);
+                GetData(Convert.ToInt32(userIdentity.Name));
             }
             else
             {
                 check = false;
             }
         }
-        private void GetData(string userId)
+        private void GetData(int userId)
         {
             user = db.users.FromSql($"SELECT * FROM users WHERE u_id={userId}").First();
-            orders = db.order.FromSql($"SELECT * FROM order WHERE o_u_id={userId}").ToList();
+            orders = db.order.FromSql($"SELECT * FROM \"order\" WHERE o_u_id={userId}").ToList();
         }
     }
 }

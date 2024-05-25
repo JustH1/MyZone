@@ -5,6 +5,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MyZone.Structs
 {
+    public class reportDayOrder
+    {
+        string season { get; set; }
+        int count { get; set; }
+    }
     public class catalogs
     {
         [Key]
