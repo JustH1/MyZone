@@ -4,22 +4,25 @@
 }
 
 <div>
-    <h1>Отчёт по заказам.</h1>
+    <h1>Отчёт.</h1>
     <br>
     <h3>Количество заказов за последнюю неделю.</h3>
     <table>
         <tr>
             <td>День недели</td> <td>Количество заказов</td>
         </tr>
-        <tr>
-
-        </tr>
+        @foreach (var item in Model.reportDayOrders)
+        {
+            <tr>
+                <td>@item.dow</td>
+                <td>@item.count</td>
+            </tr>
+        }
     </table>
-
-    <h3>Количество заказов по ценовому объёму.</h3>
-    <table>
-
-    </table>
+    <br>
+    <h3>Всего: @Model.reportDayOrders.Sum(p => p.count) заказов</h3>
+    
+    <br>
 
     <div id="paymentsChartContainer" style="height: 400px; width: 100%;"></div>
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -30,19 +33,19 @@
                     type: 'line'
                 },
                 title: {
-                    text: 'График платежей по датам'
+                    text: 'График количества заказов за текущую неделю.'
                 },
                 xAxis: {
-                    categories: []
+                    categories: @Html.Raw(Json.Serialize(Model.reportDayOrders.Select(p => p.dow.ToString())))
                 },
                 yAxis: {
                     title: {
-                        text: 'Сумма платежа'
+                        text: 'Количество заказов'
                     }
                 },
                 series: [{
-                    name: 'Сумма',
-                    data: [10.1,200,10000,200,500,100]
+                    name: 'Дни недели',
+                    data: @Html.Raw(Json.Serialize(Model.reportDayOrders.Select(p => (int)p.count))) 
                 }]
             });
         });

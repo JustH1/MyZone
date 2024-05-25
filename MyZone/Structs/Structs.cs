@@ -7,8 +7,8 @@ namespace MyZone.Structs
 {
     public class reportDayOrder
     {
-        string season { get; set; }
-        int count { get; set; }
+        public int dow { get; set; }
+        public int count { get; set; }
     }
     public class catalogs
     {
